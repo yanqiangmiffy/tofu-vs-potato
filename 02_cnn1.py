@@ -17,6 +17,14 @@ import matplotlib.pyplot as plt  # 2D plotting library
 import cv2  # image processing library
 import tensorflow as tf
 from tqdm import tqdm
+from sklearn.model_selection import train_test_split
+from keras.preprocessing import image
+from keras.models import Sequential
+from keras.layers import Dense, Dropout, Flatten
+from keras.layers import Conv2D, MaxPooling2D
+import matplotlib.pyplot as plt
+import cv2
+from keras.utils import to_categorical
 
 # Here's our 6 categories that we have to classify.
 class_names = ['potato', 'tofu']
@@ -47,6 +55,7 @@ def load_data(data_dir, size=(150, 150), is_train=False):
 
 
 train_images, train_labels = load_data('data/train', is_train=True)
+train_labels = to_categorical(train_labels)
 test_images, test_labels = load_data('data/test', is_train=False)
 
 print(test_images.shape[-1])
@@ -57,60 +66,24 @@ test_df = pd.DataFrame({
 train_images = train_images / 255.0
 test_images = test_images / 255.0
 
-index = np.random.randint(train_images.shape[0])
-plt.figure()
-plt.imshow(train_images[index])
-plt.grid(False)
-plt.title('Image #{} : '.format(index) + class_names[train_labels[index]])
-plt.show()
+model = Sequential()
+model.add(Conv2D(32, kernel_size=(5, 5), activation='relu', input_shape=(32, 32, 3)))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Flatten())
+model.add(Dense(100, activation='relu'))
+model.add(Dropout(0.25))
+model.add(Dense(2, activation='softmax'))
+model.compile(loss='categorical_crossentropy', optimizer='Adam', metrics=['accuracy'])
 
-fig = plt.figure(figsize=(10, 10))
-fig.suptitle("Some examples of images of the dataset", fontsize=16)
-for i in range(25):
-    plt.subplot(5, 5, i + 1)
-    plt.xticks([])
-    plt.yticks([])
-    plt.grid(False)
-    plt.imshow(train_images[i], cmap=plt.cm.binary)
-    plt.xlabel(class_names[train_labels[i]])
-plt.show()
-
-model = tf.keras.Sequential([
-    tf.keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=(150, 150, 3)),
-    # the nn will learn the good filter to use
-    tf.keras.layers.MaxPooling2D(2, 2),
-    tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
-    tf.keras.layers.MaxPooling2D(2, 2),
-    tf.keras.layers.Flatten(),
-    tf.keras.layers.Dense(128, activation=tf.nn.relu),
-    tf.keras.layers.Dense(6, activation=tf.nn.softmax)
-])
-
-model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 history = model.fit(train_images, train_labels, batch_size=128, epochs=20, validation_split=0.2)
-
-fig = plt.figure(figsize=(10, 5))
-plt.subplot(221)
-plt.plot(history.history['acc'], 'bo--', label="acc")
-plt.plot(history.history['val_acc'], 'ro--', label="val_acc")
-plt.title("train_acc vs val_acc")
-plt.ylabel("accuracy")
-plt.xlabel("epochs")
-plt.legend()
-
-plt.subplot(222)
-plt.plot(history.history['loss'], 'bo--', label="loss")
-plt.plot(history.history['val_loss'], 'ro--', label="val_loss")
-plt.title("train_loss vs val_loss")
-plt.ylabel("loss")
-plt.xlabel("epochs")
-
-plt.legend()
-plt.show()
 
 predictions = model.predict(test_images)
 pred_labels = np.argmax(predictions, axis=1)
 
 print(pred_labels)
-test_df['label']=pred_labels
+test_df['label'] = pred_labels
 test_df[['id', 'label']].to_csv('cnn.csv', index=None, header=False)
