@@ -119,7 +119,7 @@ def create_model(input_shape):
     model.add(Dropout(0.2))
     model.add(Dense(1))
     model.add(Activation('sigmoid'))
-    model.compile(loss='categorical_crossentropy', optimizer=Adam(), metrics=['accuracy'])
+    model.compile(loss='sparse_categorical_crossentropy', optimizer=Adam(), metrics=['accuracy'])
     model.summary()
 
     return model
