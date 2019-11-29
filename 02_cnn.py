@@ -141,7 +141,7 @@ gen = ImageDataGenerator(rotation_range=8, width_shift_range=0.08, shear_range=0
                          height_shift_range=0.08, zoom_range=0.08)
 test_gen = ImageDataGenerator()
 train_generator = gen.flow(train_images, train_labels, batch_size=64)
-test_generator = test_gen.flow(test_images, test_labels, batch_size=64)
+test_generator = test_gen.flow(test_images, batch_size=64)
 history=model.fit_generator(train_generator,
                             epochs=10,
                             )
