@@ -26,7 +26,8 @@ from keras.optimizers import Adam
 from keras.callbacks import ModelCheckpoint
 from keras import backend as K
 import keras
-from keras.utils import np_utils
+import tensorflow as tf
+
 from tensorflow import set_random_seed
 set_random_seed(2019)
 
@@ -59,7 +60,6 @@ def load_data(data_dir, size=(150, 150), is_train=False):
 
 
 train_images, train_labels = load_data('data/train', is_train=True)
-train_labels = np_utils.to_categorical(train_labels, num_classes=2)
 test_images, test_labels = load_data('data/test', is_train=False)
 
 print ("Number of training examples: " + str(train_images.shape[0]))
@@ -117,8 +117,8 @@ def create_model(input_shape):
     model.add(Activation('relu'))
     BatchNormalization()
     model.add(Dropout(0.2))
-    model.add(Dense(2))
-    model.add(Activation('softmax'))
+    model.add(Dense(1))
+    model.add(Activation('sigmoid'))
     model.compile(loss='categorical_crossentropy', optimizer=Adam(), metrics=['accuracy'])
     model.summary()
 
@@ -170,8 +170,11 @@ history=model.fit_generator(train_generator,
 
 # predictions = model.predict(test_images)
 predictions = model.predict_generator(test_generator)
-pred_labels = np.argmax(predictions, axis=1)
+res = predictions.tolist()
+pred_labels = [num for num in res]
+# pred_labels = np.argmax(predictions, axis=1)
 
 print(pred_labels)
 test_df['label'] = pred_labels
+test_df['label'] = test_df['label'].apply(lambda x: 1 if x > 0.5 else 0)
 test_df[['id', 'label']].to_csv('cnn.csv', index=None, header=False)
