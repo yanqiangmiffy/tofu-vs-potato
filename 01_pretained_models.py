@@ -71,19 +71,7 @@ train_aug_datagen = ImageDataGenerator(
     zoom_range=0.2,
     width_shift_range=0.1,
     height_shift_range=0.1,
-    horizontal_flip=True,
-
-    featurewise_center=True,
-    samplewise_center=True,
-    featurewise_std_normalization=True,
-    samplewise_std_normalization=True,
-    zca_whitening=True,
-    zca_epsilon=1e-5,
-    channel_shift_range=0.,
-    fill_mode='nearest',
-    vertical_flip=True,
-    data_format='channels_last',
-    interpolation_order=1,
+    horizontal_flip=True
 )
 train_generator = two_image_generator(train_aug_datagen, train_df, 'data/train',
                                       batch_size=batch_size, y_col='label',
@@ -141,7 +129,6 @@ def train():
     )
     multiple_pretained_model.save('dogcat.weights.best.hdf5')
 
-
 train()
 
 
@@ -155,24 +142,7 @@ def predict():
     print(test_df)
     test_df['id'] = test_df['filename'].apply(lambda x: int(x.split('.')[0]))
     num_test = len(test_df)
-    test_datagen = ImageDataGenerator(rotation_range=20,
-                                      shear_range=0.1,
-                                      zoom_range=0.2,
-                                      width_shift_range=0.1,
-                                      height_shift_range=0.1,
-                                      horizontal_flip=True,
-
-                                      featurewise_center=True,
-                                      samplewise_center=True,
-                                      featurewise_std_normalization=True,
-                                      samplewise_std_normalization=True,
-                                      zca_whitening=True,
-                                      zca_epsilon=1e-5,
-                                      channel_shift_range=0.,
-                                      fill_mode='nearest',
-                                      vertical_flip=True,
-                                      data_format='channels_last',
-                                      interpolation_order=1, )
+    test_datagen = ImageDataGenerator()
     test_generator = two_image_generator(test_datagen, test_df, 'data/test', batch_size=batch_size)
 
     prediction = multiple_pretained_model.predict_generator(test_generator,
