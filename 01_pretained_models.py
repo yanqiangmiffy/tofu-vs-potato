@@ -71,7 +71,19 @@ train_aug_datagen = ImageDataGenerator(
     zoom_range=0.2,
     width_shift_range=0.1,
     height_shift_range=0.1,
-    horizontal_flip=True
+    horizontal_flip=True,
+
+    featurewise_center=True,
+    samplewise_center=True,
+    featurewise_std_normalization=True,
+    samplewise_std_normalization=True,
+    zca_whitening=True,
+    zca_epsilon=1e-5,
+    channel_shift_range=0.,
+    fill_mode='nearest',
+    vertical_flip=True,
+    data_format='channels_last',
+    interpolation_order=1,
 )
 train_generator = two_image_generator(train_aug_datagen, train_df, 'data/train',
                                       batch_size=batch_size, y_col='label',
@@ -94,9 +106,9 @@ def create_base_model(MODEL, img_size, lambda_fun=None):
 model1 = create_base_model(vgg16.VGG16, (224, 224), vgg16.preprocess_input)
 model2 = create_base_model(resnet50.ResNet50, (224, 224), resnet50.preprocess_input)
 model3 = create_base_model(inception_v3.InceptionV3, (299, 299), inception_v3.preprocess_input)
-model1.trainable = True
-model2.trainable = True
-model3.trainable = True
+model1.trainable = False
+model2.trainable = False
+model3.trainable = False
 
 inpA = Input(shape=(224, 224, 3))
 inpB = Input(shape=(299, 299, 3))
@@ -129,6 +141,7 @@ def train():
     )
     multiple_pretained_model.save('dogcat.weights.best.hdf5')
 
+
 train()
 
 
@@ -142,7 +155,24 @@ def predict():
     print(test_df)
     test_df['id'] = test_df['filename'].apply(lambda x: int(x.split('.')[0]))
     num_test = len(test_df)
-    test_datagen = ImageDataGenerator()
+    test_datagen = ImageDataGenerator(rotation_range=20,
+                                      shear_range=0.1,
+                                      zoom_range=0.2,
+                                      width_shift_range=0.1,
+                                      height_shift_range=0.1,
+                                      horizontal_flip=True,
+
+                                      featurewise_center=True,
+                                      samplewise_center=True,
+                                      featurewise_std_normalization=True,
+                                      samplewise_std_normalization=True,
+                                      zca_whitening=True,
+                                      zca_epsilon=1e-5,
+                                      channel_shift_range=0.,
+                                      fill_mode='nearest',
+                                      vertical_flip=True,
+                                      data_format='channels_last',
+                                      interpolation_order=1, )
     test_generator = two_image_generator(test_datagen, test_df, 'data/test', batch_size=batch_size)
 
     prediction = multiple_pretained_model.predict_generator(test_generator,
