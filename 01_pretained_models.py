@@ -130,36 +130,38 @@ def train():
 
 
 train()
-# def predict():
-#     print("正在加载模型：")
-#     multiple_pretained_model.load_weights('dogcat.weights.best.hdf5')
-#     test_filenames = os.listdir("cat_dog/test")
-#     test_df = pd.DataFrame({
-#         'filename': test_filenames
-#     })
-#     print(test_df)
-#     test_df['id'] = test_df['filename'].apply(lambda x: int(x.split('.')[0]))
-#     num_test = len(test_df)
-#     test_datagen = ImageDataGenerator()
-#     test_generator = two_image_generator(test_datagen, test_df, 'cat_dog/test', batch_size=batch_size)
-#
-#     prediction = multiple_pretained_model.predict_generator(test_generator,
-#                                                             steps=np.ceil(num_test / batch_size),
-#                                                             # workers=8,
-#                                                             verbose=1)
-#     prediction = prediction.clip(min=0.005, max=0.995)
-#
-#     print(prediction)
-#     print(type(prediction))
-#     print(list(prediction))
-#     print(prediction.tolist())
-#     res=prediction.tolist()[0]
-#     res = [num[0] for num in res]
-#     test_df['pred'] =res
-#     print(test_df)
-#     test_df['label'] = test_df['pred'].apply(lambda x: 1 if x > 0.5 else 0)
-#     # test_df['label'] = np.argmax(prediction, axis=1)
-#     test_df[['id', 'label']].to_csv('pretrained.csv', index=None, header=False)
-#
-#
-# predict()
+
+
+def predict():
+    print("正在加载模型：")
+    multiple_pretained_model.load_weights('dogcat.weights.best.hdf5')
+    test_filenames = os.listdir("cat_dog/test")
+    test_df = pd.DataFrame({
+        'filename': test_filenames
+    })
+    print(test_df)
+    test_df['id'] = test_df['filename'].apply(lambda x: int(x.split('.')[0]))
+    num_test = len(test_df)
+    test_datagen = ImageDataGenerator()
+    test_generator = two_image_generator(test_datagen, test_df, 'cat_dog/test', batch_size=batch_size)
+
+    prediction = multiple_pretained_model.predict_generator(test_generator,
+                                                            steps=np.ceil(num_test / batch_size),
+                                                            # workers=8,
+                                                            verbose=1)
+    prediction = prediction.clip(min=0.005, max=0.995)
+
+    print(prediction)
+    print(type(prediction))
+    print(list(prediction))
+    print(prediction.tolist())
+    res = prediction.tolist()[0]
+    res = [num[0] for num in res]
+    test_df['pred'] = res
+    print(test_df)
+    test_df['label'] = test_df['pred'].apply(lambda x: 1 if x > 0.5 else 0)
+    # test_df['label'] = np.argmax(prediction, axis=1)
+    test_df[['id', 'label']].to_csv('pretrained.csv', index=None, header=False)
+
+
+predict()
