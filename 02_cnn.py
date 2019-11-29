@@ -26,8 +26,7 @@ from keras.optimizers import Adam
 from keras.callbacks import ModelCheckpoint
 from keras import backend as K
 import keras
-import tensorflow as tf
-
+from keras.utils import np_utils
 from tensorflow import set_random_seed
 set_random_seed(2019)
 
@@ -60,6 +59,7 @@ def load_data(data_dir, size=(150, 150), is_train=False):
 
 
 train_images, train_labels = load_data('data/train', is_train=True)
+train_labels = np_utils.to_categorical(train_labels, num_classes=2)
 test_images, test_labels = load_data('data/test', is_train=False)
 
 print ("Number of training examples: " + str(train_images.shape[0]))
