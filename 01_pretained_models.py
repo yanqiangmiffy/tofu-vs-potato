@@ -94,9 +94,9 @@ def create_base_model(MODEL, img_size, lambda_fun=None):
 model1 = create_base_model(vgg16.VGG16, (224, 224), vgg16.preprocess_input)
 model2 = create_base_model(resnet50.ResNet50, (224, 224), resnet50.preprocess_input)
 model3 = create_base_model(inception_v3.InceptionV3, (299, 299), inception_v3.preprocess_input)
-model1.trainable = False
-model2.trainable = False
-model3.trainable = False
+model1.trainable = True
+model2.trainable = True
+model3.trainable = True
 
 inpA = Input(shape=(224, 224, 3))
 inpB = Input(shape=(299, 299, 3))
