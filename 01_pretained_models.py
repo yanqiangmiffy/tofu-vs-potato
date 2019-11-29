@@ -18,7 +18,7 @@ logging.getLogger("tensorflow").setLevel(logging.ERROR)
 
 label_df = pd.read_csv('data/train.csv', header=None)
 label_df.columns = ['id', 'label']
-train_labels = label_df['label'].values.tolist()
+train_labels = [str(i) for i in label_df['label'].values.tolist()]
 train_filenames = os.listdir("data/train")
 
 #
