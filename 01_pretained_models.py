@@ -73,7 +73,7 @@ train_aug_datagen = ImageDataGenerator(
     height_shift_range=0.1,
     horizontal_flip=True
 )
-train_generator = two_image_generator(train_aug_datagen, train_df, 'cat_dog/train',
+train_generator = two_image_generator(train_aug_datagen, train_df, 'data/train',
                                       batch_size=batch_size, y_col='label',
                                       model='binary', shuffle=True)
 
@@ -127,7 +127,7 @@ def train():
         verbose=1,
         callbacks=[checkpointer]
     )
-
+    multiple_pretained_model.save('dogcat.weights.best.hdf5')
 
 train()
 
@@ -135,7 +135,7 @@ train()
 def predict():
     print("正在加载模型：")
     multiple_pretained_model.load_weights('dogcat.weights.best.hdf5')
-    test_filenames = os.listdir("cat_dog/test")
+    test_filenames = os.listdir("data/test")
     test_df = pd.DataFrame({
         'filename': test_filenames
     })
@@ -143,7 +143,7 @@ def predict():
     test_df['id'] = test_df['filename'].apply(lambda x: int(x.split('.')[0]))
     num_test = len(test_df)
     test_datagen = ImageDataGenerator()
-    test_generator = two_image_generator(test_datagen, test_df, 'cat_dog/test', batch_size=batch_size)
+    test_generator = two_image_generator(test_datagen, test_df, 'data/test', batch_size=batch_size)
 
     prediction = multiple_pretained_model.predict_generator(test_generator,
                                                             steps=np.ceil(num_test / batch_size),
