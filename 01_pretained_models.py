@@ -155,7 +155,7 @@ def predict():
     print(type(prediction))
     print(list(prediction))
     print(prediction.tolist())
-    res = prediction.tolist()[0]
+    res = prediction.tolist()
     res = [num[0] for num in res]
     test_df['pred'] = res
     print(test_df)
