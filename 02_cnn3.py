@@ -77,6 +77,7 @@ model.add(Flatten())
 model.add(Dense(128, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(2, activation='softmax'))
+model.compile(loss='categorical_crossentropy', optimizer='Adam', metrics=['accuracy'])
 
 history = model.fit(train_images, train_labels, batch_size=128, epochs=20, validation_split=0.2)
 
