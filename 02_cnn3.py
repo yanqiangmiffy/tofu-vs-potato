@@ -79,7 +79,7 @@ model.add(Dropout(0.5))
 model.add(Dense(2, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='Adam', metrics=['accuracy'])
 
-history = model.fit(train_images, train_labels, batch_size=128, epochs=20, validation_split=0.2)
+history = model.fit(train_images, train_labels, batch_size=32, epochs=20, validation_split=0.2)
 
 predictions = model.predict(test_images)
 pred_labels = np.argmax(predictions, axis=1)
