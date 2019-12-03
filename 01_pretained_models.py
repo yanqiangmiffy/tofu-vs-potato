@@ -33,7 +33,7 @@ train_num = len(train_df)
 
 def two_image_generator(generator, df, directory, batch_size,
                         x_col='filename', y_col=None, model=None, shuffle=False,
-                        img_size1=(224, 224), img_size2=(299, 299)):
+                        img_size1=(128, 128), img_size2=(200, 200)):
     gen1 = generator.flow_from_dataframe(
         df,
         directory,
@@ -91,15 +91,15 @@ def create_base_model(MODEL, img_size, lambda_fun=None):
 
 
 # define vgg + resnet50 + densenet
-model1 = create_base_model(vgg16.VGG16, (224, 224), vgg16.preprocess_input)
-model2 = create_base_model(resnet50.ResNet50, (224, 224), resnet50.preprocess_input)
-model3 = create_base_model(inception_v3.InceptionV3, (299, 299), inception_v3.preprocess_input)
+model1 = create_base_model(vgg16.VGG16, (128, 128), vgg16.preprocess_input)
+model2 = create_base_model(resnet50.ResNet50, (128, 128), resnet50.preprocess_input)
+model3 = create_base_model(inception_v3.InceptionV3, (200, 200), inception_v3.preprocess_input)
 model1.trainable = False
 model2.trainable = False
 model3.trainable = False
 
-inpA = Input(shape=(224, 224, 3))
-inpB = Input(shape=(299, 299, 3))
+inpA = Input(shape=(128, 128, 3))
+inpB = Input(shape=(200, 200, 3))
 out1 = model1(inpA)
 out2 = model2(inpA)
 out3 = model3(inpB)

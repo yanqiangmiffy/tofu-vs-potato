@@ -34,7 +34,7 @@ class_names_label = {'potato': 1,
 nb_classes = 2
 
 
-def load_data(data_dir, size=(300, 300), is_train=False):
+def load_data(data_dir, size=(128, 128), is_train=False):
     """
     加载图片数据集
     """
@@ -69,7 +69,7 @@ test_images = test_images / 255.0
 model = Sequential()
 model.add(Conv2D(32, kernel_size=(3, 3),
                  activation='relu',
-                 input_shape=(300,300,3)))
+                 input_shape=(128,128,3)))
 model.add(Conv2D(64, (3, 3), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
