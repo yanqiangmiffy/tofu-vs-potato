@@ -214,7 +214,7 @@ if __name__ == '__main__':
                           transforms.ToTensor(),
                           transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
                       ])
-                      ), batch_size=10, shuffle=True, num_workers=20, pin_memory=True
+                      ), batch_size=10, shuffle=True, num_workers=0, pin_memory=True
         )
 
         val_loader = torch.utils.data.DataLoader(

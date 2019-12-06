@@ -116,7 +116,7 @@ for model_path in ['resnet18_fold0.pt', 'resnet18_fold1.pt', 'resnet18_fold2.pt'
                       transforms.ToTensor(),
                       transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
                   ])
-                  ), batch_size=10, shuffle=False, num_workers=10, pin_memory=True
+                  ), batch_size=10, shuffle=False, num_workers=0, pin_memory=True
     )
 
     model = VisitNet().cuda()
