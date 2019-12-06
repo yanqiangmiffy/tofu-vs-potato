@@ -36,6 +36,8 @@ def load_data(data_dir, size=(150, 150), is_train=False):
         label_df = pd.read_csv('data/train.csv', header=None)
         label_df.columns = ['id', 'label']
         labels = [str(i) for i in label_df['label'].values.tolist()]
+    filenames = os.listdir(data_dir)
+    filenames.sort(key=lambda x: int(x[:-4]))
     for img_name in tqdm(os.listdir(data_dir)):
         img_path = data_dir + "/" + img_name
         curr_img = cv2.imread(img_path)
@@ -112,5 +114,5 @@ predictions = model.predict(test_images)
 pred_labels = np.argmax(predictions, axis=1)
 
 print(pred_labels)
-test_df['label']=pred_labels
+test_df['label'] = pred_labels
 test_df[['id', 'label']].to_csv('cnn.csv', index=None, header=False)

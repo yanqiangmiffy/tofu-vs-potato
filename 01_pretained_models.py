@@ -11,7 +11,7 @@ from sklearn.model_selection import train_test_split
 from keras.callbacks import ModelCheckpoint
 from keras import regularizers
 import logging
-
+import ipykernel
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 warnings.filterwarnings('ignore')
 logging.getLogger("tensorflow").setLevel(logging.ERROR)
@@ -19,8 +19,9 @@ logging.getLogger("tensorflow").setLevel(logging.ERROR)
 label_df = pd.read_csv('data/train.csv', header=None)
 label_df.columns = ['id', 'label']
 train_labels = [str(i) for i in label_df['label'].values.tolist()]
-train_filenames = os.listdir("data/train")
-
+# train_filenames = os.listdir("data/train")
+train_filenames = label_df['id'].apply(lambda x:str(x)+'.jpg').values.tolist()
+print(train_filenames)
 #
 train_df = pd.DataFrame({
     'filename': train_filenames,
@@ -117,7 +118,7 @@ def train():
 
     multiple_pretained_model.summary()
 
-    checkpointer = ModelCheckpoint(filepath='dogcat.weights.best.hdf5', verbose=1,
+    checkpointer = ModelCheckpoint(filepath='models/dogcat.weights.best.hdf5', verbose=1,
                                    save_best_only=True, save_weights_only=True)
 
     multiple_pretained_model.fit_generator(
@@ -135,7 +136,9 @@ train()
 def predict():
     print("正在加载模型：")
     multiple_pretained_model.load_weights('dogcat.weights.best.hdf5')
-    test_filenames = os.listdir("data/test")
+    num_test_img = len(os.listdir("data/test"))
+    test_filenames = [str(i)+'.jpg' for i in range(num_test_img)]
+
     test_df = pd.DataFrame({
         'filename': test_filenames
     })
