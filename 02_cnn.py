@@ -38,6 +38,7 @@ def load_data(data_dir, size=(150, 150), is_train=False):
         labels = [str(i) for i in label_df['label'].values.tolist()]
     filenames = os.listdir(data_dir)
     filenames.sort(key=lambda x: int(x[:-4]))
+    print(filenames)
     for img_name in tqdm(os.listdir(data_dir)):
         img_path = data_dir + "/" + img_name
         curr_img = cv2.imread(img_path)
