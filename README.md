@@ -22,3 +22,6 @@
 
 加入数据增强防止过拟合
 ```
+
+### 尝试3
+[阿水baseline](https://github.com/datawhalechina/competition-baseline/tree/master/competition/AI%E7%A0%94%E4%B9%A0%E7%A4%BE-%E7%BE%8E%E9%A3%9F%E8%AF%86%E5%88%AB%E6%8C%91%E6%88%98%EF%BC%881%EF%BC%89%EF%BC%9A%E8%B1%86%E8%85%90VS%E5%9C%9F%E8%B1%86 )
